@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sana Mufti</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #F3EBDB;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            max-width: 75vw;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .navbar-custom {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            background-color: #F3EBDB;
+            border-bottom: 0.5px solid black;
+            position: relative;
+            z-index: 9999;
+        }
+
+        .navbar-right .nav-link,
+        .navbar-left .nav-link {
+            font-size: 1rem;
+            font-weight: 500;
+            color: black;
+        }
+
+        .gap-custom {
+            gap: 10rem;
+        }
+
+        .navbar-right .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Hero section blue box: keep old height & padding, but constrain width and center */
+        .orange-background {
+            margin-top: 220px;
+            position: relative;
+            z-index: 1;
+            padding-top: 10rem;
+            padding-bottom: 10rem;
+            background-color: #692B12;
+            border-radius: 0.25rem;
+
+            /* New: constrain width & center like About Me */
+            max-width: 75vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .shop-button {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: 0.5rem 2rem;
+            border-radius: 0.25rem;
+            border: none;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s ease;
+            z-index: 30;
+            position: relative;
+            top: -150px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .shop-button:hover {
+            background-color: #f1d6c6;
+            color: black;
+        }
+
+
+        .hero-img {
+            width: 100%;
+            height: auto;
+            position: relative;
+            margin-top: -750px;
+            /* pull image up */
+            z-index: 10;
+        }
+
+        /* Remove negative margin from container */
+        .position-relative {
+            margin-bottom: 0;
+        }
+
+        .book-name {
+            position: absolute;
+            top: 125px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            color: white;
+            font-size: 120px;
+            font-weight: 600;
+        }
+
+        .about-me {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .aboutme-title {
+            text-align: left;
+            font-weight: 600;
+            margin-top: -4rem;
+        }
+
+        .blue-background-new {
+            background-color: #828A99;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 3rem 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .digi-book-img {
+            width: 750px;
+            /* increase as needed */
+            height: auto;
+            /* keeps aspect ratio */
+            padding-right: 300px;
+        }
+
+
+        .shop-button-digit {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: 0.5rem 2rem;
+            border-radius: 0.25rem;
+            border: none;
+            background-color: white;
+            color: black;
+            align-items: center;
+        }
+
+        .publications-work {
+            background-color: #8B7343;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 3rem 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .hover-underline:hover {
+            text-decoration: underline;
+            opacity: 0.9;
+        }
+
+        .publications-work ul li a {
+            transition: all 0.3s ease;
+        }
+
+
+        footer {
+            background-color: #F3EBDB;
+            border-top: 0.5px solid black;
+        }
+
+        footer a {
+            color: black;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar navbar-light navbar-custom">
+            <div class="page-container d-flex justify-content-between align-items-center">
+
+                <div class="navbar-right d-flex gap-custom align-items-center">
+
+                    <a class="nav-link p-0" href="#">Home</a>
+                    <a class="nav-link p-0" href="#">About</a>
+                    <a class="nav-link p-0" href="#">Projects</a>
+                    <a class="nav-link p-0" href="#">Blog</a>
+                    <a class="nav-link p-0" href="#">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div>
+        <span th:if="${username != null}">
+            Hi, <span th:text="${username}">User</span>!
+        </span>
+    </div>
+
+   
+
+
+
+    <!-- Footer -->
+    <footer class="text-center text-black py-5 mt-5 shadow-sm">
+        <div class="page-container">
+            <p class="mb-2" style="font-size: 1.1rem; letter-spacing: 0.05em;">
+                &copy; 2025 <span style="font-weight: 600;">Mind.Full.Of.Dreams</span><br />
+                all rights reserved
+            </p>
+            <div class="d-flex justify-content-center gap-4">
+                <a href="#" class="text-decoration-none small">contact</a>
+                <a href="#" class="text-decoration-none small">privacy policy</a>
+                <a href="#" class="text-decoration-none small">instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
