@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import com.example.blog.Model.User;
 import com.example.blog.Repository.UserRepository;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class UserService {
 
     private final UserRepository userRepo;
 
-    
     public UserService(UserRepository userRepository) {
         this.userRepo = userRepository;
     }
@@ -74,4 +75,9 @@ public class UserService {
 
         return usr;
     }
+
+    public void logout(HttpSession session) {
+        session.invalidate(); // clears the entire session
+    }
+
 }
