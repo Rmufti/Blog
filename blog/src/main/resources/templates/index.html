@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -55,67 +54,39 @@
             text-decoration: underline;
         }
 
-        /* Hero section blue box: keep old height & padding, but constrain width and center */
-        .orange-background {
+        .blue-background {
             margin-top: 220px;
             position: relative;
             z-index: 1;
             padding-top: 10rem;
             padding-bottom: 10rem;
-            background-color: #692B12;
+            background-color: #4E6A85;
             border-radius: 0.25rem;
-
-            /* New: constrain width & center like About Me */
             max-width: 75vw;
             margin-left: auto;
             margin-right: auto;
         }
-
-        .shop-button {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
-            font-weight: 500;
-            padding: 0.5rem 2rem;
-            border-radius: 0.25rem;
-            border: none;
-            background-color: white;
-            color: black;
-            transition: background-color 0.3s ease;
-            z-index: 30;
-            position: relative;
-            top: -150px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .shop-button:hover {
-            background-color: #f1d6c6;
-            color: black;
-        }
-
 
         .hero-img {
             width: 100%;
             height: auto;
             position: relative;
             margin-top: -750px;
-            /* pull image up */
             z-index: 10;
         }
 
-        /* Remove negative margin from container */
         .position-relative {
             margin-bottom: 0;
         }
 
-        .book-name {
+        .brand-name {
             position: absolute;
-            top: 125px;
+            top: 200px;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
             color: white;
-            font-size: 120px;
+            font-size: 100px;
             font-weight: 600;
         }
 
@@ -127,55 +98,32 @@
         .aboutme-title {
             text-align: left;
             font-weight: 600;
-            margin-top: -4rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
         }
 
         .blue-background-new {
-            background-color: #828A99;
+            background-color: #4E6A85;
             color: white;
             border-radius: 0.25rem;
-            padding: 3rem 3rem;
+            padding: 3rem;
             margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .digi-book-img {
-            width: 750px;
-            /* increase as needed */
+        .about-me-img {
+            width: 1000px;
+            /* Increase this gradually if needed */
             height: auto;
-            /* keeps aspect ratio */
-            padding-right: 300px;
+            border-radius: 0.5rem;
+            padding-right: 500px;
+            /* Optional, if you want slightly rounded edges */
         }
 
-
-        .shop-button-digit {
-            font-family: 'Cormorant Garamond', serif;
+        .about-me p {
             font-size: 1.25rem;
-            font-weight: 500;
-            padding: 0.5rem 2rem;
-            border-radius: 0.25rem;
-            border: none;
-            background-color: white;
-            color: black;
-            align-items: center;
+            line-height: 1.7;
         }
-
-        .publications-work {
-            background-color: #8B7343;
-            color: white;
-            border-radius: 0.25rem;
-            padding: 3rem 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .hover-underline:hover {
-            text-decoration: underline;
-            opacity: 0.9;
-        }
-
-        .publications-work ul li a {
-            transition: all 0.3s ease;
-        }
-
 
         footer {
             background-color: #F3EBDB;
@@ -189,10 +137,22 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 768px) {
+            .gap-custom {
+                gap: 3rem;
+            }
+
+            .about-me-img {
+                max-width: 100%;
+                padding-top: 2rem;
+            }
+        }
     </style>
 </head>
 
 <body>
+
     <!-- Navigation Bar -->
     <header>
         <nav class="navbar navbar-light navbar-custom">
@@ -203,7 +163,7 @@
                     <a class="nav-link p-0" href="#">Projects</a>
                     <a class="nav-link p-0" href="blog">Blog</a>
                     <a class="nav-link p-0" href="#">Contact</a>
-
+                    
                     <!-- Conditionally render "Sign In" or user's name -->
                     <a class="nav-link p-0" th:if="${username == null}" href="/signin">Sign-In</a>
                     <a class="nav-link p-0" th:if="${username != null}" href="/profile" th:text="${username}"></a>
@@ -213,16 +173,53 @@
         </nav>
     </header>
 
+    <!-- Hero Section -->
+    <section class="hero position-relative">
+        <div class="container py-5 text-center">
+            <h1 class="display-4 fw-dark">Sana Mufti</h1>
+        </div>
 
-    <div>
-        <span th:if="${username != null}">
-            Hi, <span th:text="${username}">User</span>!
-        </span>
-    </div>
+        <div class="position-relative">
+            <div class="blue-background text-white">
+                <!-- Optional hero text -->
+            </div>
 
+            <img src="images/Untitled_design-removebg-preview.png" alt="Hero Image"
+                class="hero-img position-relative start-50 translate-middle-x" />
 
+            <h2 class="brand-name">Mind.Full.Of.Dreams</h2>
+        </div>
+    </section>
 
+    <!-- About Me -->
+    <section class="about-me my-5">
+        <div class="page-container">
+            <h1 class="aboutme-title fw-dark">About Me</h1>
 
+            <div class="blue-background-new">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <p>
+                            I’m an editor, writer, and content strategist who loves shaping compelling stories. With
+                            experience in editorial
+                            management, content planning, and audience engagement, I’ve worked with writers to refine
+                            their work and bring
+                            impactful ideas to life. As Lead Poetry Editor at Barren Magazine, I’ve managed editorial
+                            workflows, collaborated
+                            with freelancers, and developed content strategies that connect with readers. Whether it’s
+                            editing, SEO-driven
+                            content, or social media marketing, I bring a sharp editorial eye and a passion for
+                            storytelling.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <img src="images/Untitled_design__1_-removebg-preview (1).png" alt="personal-img"
+                            class="about-me-img" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="text-center text-black py-5 mt-5 shadow-sm">

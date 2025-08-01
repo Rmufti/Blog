@@ -32,11 +32,7 @@ public class UserController {
 
     // Process signin and save user in session
     @PostMapping("/signin")
-    public String processSignin(@RequestParam String email,
-                                @RequestParam String password,
-                                @RequestParam(required = false) String returnUrl,
-                                HttpSession session,
-                                Model model) {
+    public String processSignin(@RequestParam String email,@RequestParam String password,@RequestParam(required = false) String returnUrl,HttpSession session,Model model) {
         try {
             User user = userService.login(email, password);
             session.setAttribute("loggedInUser", user);
@@ -44,11 +40,33 @@ public class UserController {
             if (returnUrl != null && !returnUrl.isEmpty()) {
                 return "redirect:" + returnUrl;
             }
-            return "redirect:/blog"; // default homepage
+            return "redirect:/index"; // default homepage
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("returnUrl", returnUrl);
             return "signin";
         }
     }
+
+
+   @PostMapping("/signin/signup")
+    public String processSignUp(@RequestParam String name,@RequestParam String email, @RequestParam String password, @RequestParam(required = false) String returnUrl,HttpSession session,Model model ){
+        try{
+            User usr = new User(name, email, password);
+            usr = userService.createUser(usr);
+            session.setAttribute("loggedInUser", usr);
+
+            if(returnUrl != null && !returnUrl.isEmpty()){
+                return "redirect:" + returnUrl;
+            }
+            return "redirect:/index";
+        } catch (Exception e){
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("returnUrl", returnUrl);
+            return "signin";
+        }
+    }
+
+
+    
 }

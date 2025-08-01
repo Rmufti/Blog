@@ -9,16 +9,15 @@ import com.example.blog.Model.User;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class blogController {
+public class indexController {
 
-    @GetMapping("/blog")
-    public String blog(HttpSession session, Model model) {
+        @GetMapping("/index")
+    public String index(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user != null) {
             model.addAttribute("username", user.getName());
         }
-        return "blog";
+        return "index";
     }
+    
 }
-
-

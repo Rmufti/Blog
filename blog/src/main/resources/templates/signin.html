@@ -6,7 +6,23 @@
 </head>
 
 <body>
-  <h1>Create a New User</h1>
+  <h1>Create A New User</h1>
+
+  <!-- Success message -->
+  <p th:if="${message}" style="color:green;" th:text="${message}"></p>
+
+  <!-- Error message -->
+  <p th:if="${error}" style="color:red;" th:text="${error}"></p>
+
+  <form action="/signin/signup" method="post">
+    <input type="name" name="name" placeholder="Name" required /><br />
+    <input type="email" name="email" placeholder="Email" required /><br />
+    <input type="password" name="password" placeholder="Password" required /><br />
+    <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <h1>Existing User</h1>
 
   <!-- Success message -->
   <p th:if="${message}" style="color:green;" th:text="${message}"></p>
@@ -15,7 +31,6 @@
   <p th:if="${error}" style="color:red;" th:text="${error}"></p>
 
   <form action="/signin" method="post">
-    <input type="text" name="name" placeholder="Name" required /><br />
     <input type="email" name="email" placeholder="Email" required /><br />
     <input type="password" name="password" placeholder="Password" required /><br />
     <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
