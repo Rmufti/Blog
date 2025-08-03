@@ -1,15 +1,19 @@
 package com.example.blog.Model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.security.auth.login.LoginContext;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -26,7 +30,8 @@ public class Post {
     @Column(columnDefinition = "TEXT") // optional: ensures proper type in DB
     private String content;
 
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     public Post() {
 
@@ -36,7 +41,7 @@ public class Post {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.created_at = date;
+        this.createdAt = date;
     }
 
     public Post(String title, String content) {
@@ -46,8 +51,8 @@ public class Post {
 
     @PrePersist
     public void prePersist() {
-        if (this.created_at == null) {
-            this.created_at = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
 
@@ -71,12 +76,15 @@ public class Post {
         this.content = content;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime created_at) {
+        this.createdAt = created_at;
     }
+
+ 
+
 
 }

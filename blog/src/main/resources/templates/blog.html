@@ -213,12 +213,37 @@
         </nav>
     </header>
 
+    <h1>All Blog Posts</h1>
 
-    <div>
-        <span th:if="${username != null}">
-            Hi, <span th:text="${username}">User</span>!
-        </span>
-    </div>
+    <a href="/blog/create">Create New Post</a>
+
+
+    <ul>
+        <li th:each="post : ${posts}">
+            <h2 th:text="${post.title}">Post Title</h2>
+            <p th:text="${post.createdAt}">Post Date Created</p>
+            <p th:text="${post.content}">Post Content</p>
+
+            <h3>Comments:</h3>
+            <ul>
+                <li th:each="comment : ${comments}">
+                    <p><strong th:text="${comment.user.name}">User</strong>: <span th:text="${comment.content}"></span>
+                    </p>
+                </li>
+            </ul>
+
+            <a th:href="@{/comments/post/{postId}/new(postId=${post.id})}">Add Comment</a>
+
+            <!-- 🗑 Delete Button -->
+            <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </form>
+
+            <hr>
+        </li>
+    </ul>
 
 
 

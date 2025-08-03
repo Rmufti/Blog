@@ -1,7 +1,11 @@
 package com.example.blog.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
+import org.hibernate.event.spi.LockEventListener;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.example.blog.Model.Post;
@@ -23,8 +27,7 @@ public class PostService {
         if (post.getTitle().length() > 100) {
             throw new IllegalArgumentException("Title too long");
         }
-        post.setCreated_at(LocalDateTime.now());
-        // Additional checks like profanity filter, rate limiting, etc.
+        post.setCreatedAt(LocalDateTime.now());
 
         return postRepo.save(post);
     }
@@ -43,9 +46,20 @@ public class PostService {
 
         post.setTitle(newTitle);
         post.setContent(newContent);
-        post.setCreated_at(LocalDateTime.now());
+        post.setCreatedAt(LocalDateTime.now());
 
         return postRepo.save(post);
     }
+
+    public List<Post> listNewest() {
+        return postRepo.findAllByOrderByCreatedAtDesc();
+    }
+
+    public Post getPostById(int id) {
+        Optional<Post> postOpt = postRepo.findById(id);
+        return postOpt.orElse(null); // returns null if not found, you can throw exception if you prefer
+    }
+
+
 
 }
