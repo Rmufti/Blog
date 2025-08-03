@@ -10,5 +10,4 @@ import com.example.blog.Model.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer>{
 
-
 }

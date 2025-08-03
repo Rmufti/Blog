@@ -224,15 +224,30 @@
             <p th:text="${post.createdAt}">Post Date Created</p>
             <p th:text="${post.content}">Post Content</p>
 
-            <h3>Comments:</h3>
             <ul>
-                <li th:each="comment : ${comments}">
-                    <p><strong th:text="${comment.user.name}">User</strong>: <span th:text="${comment.content}"></span>
-                    </p>
+                <!-- Loop over comments for this post -->
+                <li th:each="comment : ${commentsByPostId[post.id]}" th:if="${commentsByPostId[post.id]} != null">
+                    <p th:text="${comment.content}">Comment by User</p>
+                    <small>By <span th:text="${comment.user.name}">User</span></small>
                 </li>
             </ul>
 
-            <a th:href="@{/comments/post/{postId}/new(postId=${post.id})}">Add Comment</a>
+            <form th:action="@{/blog/createComment}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <label for="content">Content:</label><br>
+                <textarea name="content" id="content" rows="6" cols="50" required></textarea><br><br>
+                <button type="submit">Create Comment</button>
+            </form>
+
+            <form th:action="@{/blog/likePost}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <button type="submit">❤️ Like</button>
+            </form>
+
+            <p>
+                Likes:
+                <span th:text="${likeCounts[post.id]}">0</span>
+            </p>
 
             <!-- 🗑 Delete Button -->
             <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display:inline;">

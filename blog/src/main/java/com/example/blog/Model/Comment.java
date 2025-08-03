@@ -1,6 +1,5 @@
 package com.example.blog.Model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -10,46 +9,59 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "comments")
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private String content;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Comment() {
-        // No-arg constructor needed by JPA
     }
 
-    public Comment(String content, User user, Post post, LocalDateTime date) {
+    public Comment(int id, Post pst, User usr, String content, LocalDateTime createdAt) {
+        this.id = id;
+        this.post = pst;
+        this.user = usr;
         this.content = content;
-        this.user = user;
-        this.post = post;
-        this.createdAt = date;
+        this.createdAt = createdAt;
     }
 
-    public User getUser() {
-        return user;
+    public Comment(Post pst, User usr, String content) {
+        this.post = pst;
+        this.user = usr;
+        this.content = content;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 
     public int getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Post getPost() {
@@ -60,24 +72,24 @@ public class Comment {
         return content;
     }
 
-    public LocalDateTime getDateAdded() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setUser(User usr) {
-        this.user = usr;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setPost(Post pst) {
-        this.post = pst;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setContent(String con) {
-        this.content = con;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
-    public void setDateAdded(LocalDateTime dateAdded) {
-        this.createdAt = dateAdded;
+    public void setCreatedAt(LocalDateTime date) {
+        this.createdAt = date;
     }
 
 }
