@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 
 <head>
     <meta charset="UTF-8" />
@@ -54,39 +55,67 @@
             text-decoration: underline;
         }
 
-        .blue-background {
+        /* Hero section blue box: keep old height & padding, but constrain width and center */
+        .orange-background {
             margin-top: 220px;
             position: relative;
             z-index: 1;
             padding-top: 10rem;
             padding-bottom: 10rem;
-            background-color: #4E6A85;
+            background-color: #692B12;
             border-radius: 0.25rem;
+
+            /* New: constrain width & center like About Me */
             max-width: 75vw;
             margin-left: auto;
             margin-right: auto;
         }
+
+        .shop-button {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            padding: 0.5rem 2rem;
+            border-radius: 0.25rem;
+            border: none;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s ease;
+            z-index: 30;
+            position: relative;
+            top: -150px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .shop-button:hover {
+            background-color: #f1d6c6;
+            color: black;
+        }
+
 
         .hero-img {
             width: 100%;
             height: auto;
             position: relative;
             margin-top: -750px;
+            /* pull image up */
             z-index: 10;
         }
 
+        /* Remove negative margin from container */
         .position-relative {
             margin-bottom: 0;
         }
 
-        .brand-name {
+        .book-name {
             position: absolute;
-            top: 200px;
+            top: 125px;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
             color: white;
-            font-size: 100px;
+            font-size: 120px;
             font-weight: 600;
         }
 
@@ -98,32 +127,55 @@
         .aboutme-title {
             text-align: left;
             font-weight: 600;
-            margin-bottom: 1.5rem;
-            font-size: 2.5rem;
+            margin-top: -4rem;
         }
 
         .blue-background-new {
-            background-color: #4E6A85;
+            background-color: #828A99;
             color: white;
             border-radius: 0.25rem;
-            padding: 3rem;
+            padding: 3rem 3rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .about-me-img {
-            width: 1000px;
-            /* Increase this gradually if needed */
+        .digi-book-img {
+            width: 750px;
+            /* increase as needed */
             height: auto;
-            border-radius: 0.5rem;
-            padding-right: 500px;
-            /* Optional, if you want slightly rounded edges */
+            /* keeps aspect ratio */
+            padding-right: 300px;
         }
 
-        .about-me p {
+
+        .shop-button-digit {
+            font-family: 'Cormorant Garamond', serif;
             font-size: 1.25rem;
-            line-height: 1.7;
+            font-weight: 500;
+            padding: 0.5rem 2rem;
+            border-radius: 0.25rem;
+            border: none;
+            background-color: white;
+            color: black;
+            align-items: center;
         }
+
+        .publications-work {
+            background-color: #8B7343;
+            color: white;
+            border-radius: 0.25rem;
+            padding: 3rem 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .hover-underline:hover {
+            text-decoration: underline;
+            opacity: 0.9;
+        }
+
+        .publications-work ul li a {
+            transition: all 0.3s ease;
+        }
+
 
         footer {
             background-color: #F3EBDB;
@@ -137,22 +189,10 @@
         footer a:hover {
             text-decoration: underline;
         }
-
-        @media (max-width: 768px) {
-            .gap-custom {
-                gap: 3rem;
-            }
-
-            .about-me-img {
-                max-width: 100%;
-                padding-top: 2rem;
-            }
-        }
     </style>
 </head>
 
 <body>
-
     <!-- Navigation Bar -->
     <header>
         <nav class="navbar navbar-light navbar-custom">
@@ -173,57 +213,56 @@
         </nav>
     </header>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Logout</button>
-    </form>
+    <h1>All Blog Posts</h1>
 
-    <!-- Hero Section -->
-    <section class="hero position-relative">
-        <div class="container py-5 text-center">
-            <h1 class="display-4 fw-dark">Sana Mufti</h1>
-        </div>
+    <a href="/blog/create">Create New Post</a>
 
-        <div class="position-relative">
-            <div class="blue-background text-white">
-                <!-- Optional hero text -->
-            </div>
 
-            <img src="images/Untitled_design-removebg-preview.png" alt="Hero Image"
-                class="hero-img position-relative start-50 translate-middle-x" />
+    <ul>
+        <li th:each="post : ${posts}">
+            <h2 th:text="${post.title}">Post Title</h2>
+            <p th:text="${post.createdAt}">Post Date Created</p>
+            <p th:text="${post.content}">Post Content</p>
 
-            <h2 class="brand-name">Mind.Full.Of.Dreams</h2>
-        </div>
-    </section>
+            <ul>
+                <!-- Loop over comments for this post -->
+                <li th:each="comment : ${commentsByPostId[post.id]}" th:if="${commentsByPostId[post.id]} != null">
+                    <p th:text="${comment.content}">Comment by User</p>
+                    <small>By <span th:text="${comment.user.name}">User</span></small>
+                </li>
+            </ul>
 
-    <!-- About Me -->
-    <section class="about-me my-5">
-        <div class="page-container">
-            <h1 class="aboutme-title fw-dark">About Me</h1>
+            <form th:action="@{/blog/createComment}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <label for="content">Content:</label><br>
+                <textarea name="content" id="content" rows="6" cols="50" required></textarea><br><br>
+                <button type="submit">Create Comment</button>
+            </form>
 
-            <div class="blue-background-new">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <p>
-                            I’m an editor, writer, and content strategist who loves shaping compelling stories. With
-                            experience in editorial
-                            management, content planning, and audience engagement, I’ve worked with writers to refine
-                            their work and bring
-                            impactful ideas to life. As Lead Poetry Editor at Barren Magazine, I’ve managed editorial
-                            workflows, collaborated
-                            with freelancers, and developed content strategies that connect with readers. Whether it’s
-                            editing, SEO-driven
-                            content, or social media marketing, I bring a sharp editorial eye and a passion for
-                            storytelling.
-                        </p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <img src="images/Untitled_design__1_-removebg-preview (1).png" alt="personal-img"
-                            class="about-me-img" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <form th:action="@{/blog/likePost}" method="post">
+                <input type="hidden" name="postId" th:value="${post.id}" />
+                <button type="submit">❤️ Like</button>
+            </form>
+
+            <p>
+                Likes:
+                <span th:text="${likeCounts[post.id]}">0</span>
+            </p>
+
+            <!-- 🗑 Delete Button -->
+            <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </form>
+
+            <hr>
+        </li>
+    </ul>
+
+
+
+
 
     <!-- Footer -->
     <footer class="text-center text-black py-5 mt-5 shadow-sm">

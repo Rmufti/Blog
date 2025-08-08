@@ -39,39 +39,52 @@ public class blogController {
 
     @GetMapping("/blog")
     public String blog(HttpSession session, Model model) {
+        // Get the logged-in user from session
         User user = (User) session.getAttribute("loggedInUser");
-        if (user != null) {
-            model.addAttribute("username", user.getName());
+
+        // Redirect to signin page if not logged in
+        if (user == null) {
+            return "redirect:/signin";
         }
 
+        // Add username to model
+        model.addAttribute("username", user.getUsername());
+
+        // Fetch all posts
         List<Post> posts = postService.listNewest();
-        List<Comment> allComments = commentService.findAll(); // Get all comments
-        // Group comments by post ID
+
+        // Fetch and group comments
+        List<Comment> allComments = commentService.findAll();
         Map<Integer, List<Comment>> commentsByPostId = new HashMap<>();
         for (Comment comment : allComments) {
             int postId = comment.getPost().getId();
             commentsByPostId.computeIfAbsent(postId, k -> new ArrayList<>()).add(comment);
         }
 
-        //Likes
+        // Fetch like counts for each post
         Map<Integer, Integer> likeCounts = new HashMap<>();
         for (Post post : posts) {
             int count = likeService.getLikeCount(post);
             likeCounts.put(post.getId(), count);
         }
 
-        
+        // Add all required data to the model
         model.addAttribute("likeCounts", likeCounts);
         model.addAttribute("posts", posts);
         model.addAttribute("commentsByPostId", commentsByPostId);
 
-        return "blog";
+        // ✅ CHECK IF THE USER IS ADMIN
+        if ("admin".equalsIgnoreCase(user.getUsername())) {
+            return "blogAdmin"; // → Go to blogAdmin.html
+        } else {
+            return "blog"; // → Go to blog.html
+        }
     }
 
     @PostMapping("/posts/delete/{id}")
     public String deletePostById(@PathVariable int id) {
         postService.deletePost(id);
-        return "redirect:/blog"; // Ensure this points to your blog listing
+        return "redirect:/blogAdmin"; // Ensure this points to your blog listing
     }
 
     @PostMapping("/blog/createComment")

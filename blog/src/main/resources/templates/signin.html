@@ -1,41 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>Signup</title>
+    <title>Sign In</title>
 </head>
 
 <body>
-  <h1>Create A New User</h1>
+    <h1>Sign In</h1>
+    <form th:action="@{/signin}" method="post">
+        <!-- Spring Security expects 'username' as the field name by default -->
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+    </form>
 
-  <!-- Success message -->
-  <p th:if="${message}" style="color:green;" th:text="${message}"></p>
+    <h1>Register</h1>
+    <form th:action="@{/register}" method="post">
+        <input type="text" name="name" placeholder="New Username" required />
+        <input type="text" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="New Password" required />
+        <button type="submit">Register</button>
+    </form>
 
-  <!-- Error message -->
-  <p th:if="${error}" style="color:red;" th:text="${error}"></p>
+    <div th:if="${param.logout}">
+        <p>You have been logged out successfully.</p>
+    </div>
 
-  <form action="/signin/signup" method="post">
-    <input type="name" name="name" placeholder="Name" required /><br />
-    <input type="email" name="email" placeholder="Email" required /><br />
-    <input type="password" name="password" placeholder="Password" required /><br />
-    <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
-    <button type="submit">Sign Up</button>
-  </form>
 
-  <h1>Existing User</h1>
-
-  <!-- Success message -->
-  <p th:if="${message}" style="color:green;" th:text="${message}"></p>
-
-  <!-- Error message -->
-  <p th:if="${error}" style="color:red;" th:text="${error}"></p>
-
-  <form action="/signin" method="post">
-    <input type="email" name="email" placeholder="Email" required /><br />
-    <input type="password" name="password" placeholder="Password" required /><br />
-    <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
-    <button type="submit">Sign Up</button>
-  </form>
 </body>
 
 </html>

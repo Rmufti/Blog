@@ -1,83 +1,55 @@
 package com.example.blog.Service;
 
-import java.util.List;
-
-//import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.blog.Model.User;
 import com.example.blog.Repository.UserRepository;
-
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepo;
+    @Autowired
+    private UserRepository userRepo;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepo = userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Create new user if email doesn't exist
-    public User createUser(User user) throws Exception {
+    public User register(User user) {
         if (userRepo.existsByEmail(user.getEmail())) {
-            throw new Exception("User already exists with email: " + user.getEmail());
+            throw new RuntimeException("Email already registered");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setDateAdded(LocalDateTime.now());
         return userRepo.save(user);
     }
 
-    // Get all users
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    @Override
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        System.out.println("Trying to login with username: " + name);
+        User user = userRepo.findByName(name)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getName())
+                .password(user.getPassword())
+                .build();
     }
 
-    // Get user by ID
-    public User getUserById(Integer id) throws Exception {
-        return userRepo.findById(id)
-                .orElseThrow(() -> new Exception("User not found with ID: " + id));
-    }
-
-    // Update user by ID
-    public User updateUser(Integer id, User user) throws Exception {
-        User existingUser = userRepo.findById(id)
-                .orElseThrow(() -> new Exception("User not found with ID: " + id));
-
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-
-        return userRepo.save(existingUser);
-    }
-
-    // Delete user by ID
-    public void deleteUser(Integer id) throws Exception {
-        if (!userRepo.existsById(id)) {
-            throw new Exception("Cannot delete. User not found with ID: " + id);
-        }
-        userRepo.deleteById(id);
-    }
-
-    // Find user by email
-    public User findByEmail(String email) throws Exception {
-        return userRepo.findByEmail(email)
-                .orElseThrow(() -> new Exception("User not found with email: " + email));
-    }
-
-    // Login: validate email and password
-    public User login(String email, String password) throws Exception {
-        User usr = userRepo.findByEmail(email)
-                .orElseThrow(() -> new Exception("Invalid email or password."));
-
-        if (!usr.getPassword().equals(password)) {
-            throw new Exception("Invalid email or password.");
-        }
-
-        return usr;
-    }
-
-    public void logout(HttpSession session) {
-        session.invalidate(); // clears the entire session
+    public User findByName(String name) {
+        return userRepo.findByName(name).orElse(null);
     }
 
 }

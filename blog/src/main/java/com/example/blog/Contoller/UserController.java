@@ -1,18 +1,18 @@
 package com.example.blog.Contoller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.example.blog.Model.User;
 import com.example.blog.Service.UserService;
 
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -23,55 +23,40 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Show signin form; capture returnUrl query param
-    @GetMapping("/signin")
-    public String showSigninForm(@RequestParam(value = "returnUrl", required = false) String returnUrl, Model model) {
-        model.addAttribute("returnUrl", returnUrl);
-        return "signin";
+    // Registration form (GET)
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register"; // return register.html view
     }
 
-    // Process signin and save user in session
-    @PostMapping("/signin")
-    public String processSignin(@RequestParam String email, @RequestParam String password,
-            @RequestParam(required = false) String returnUrl, HttpSession session, Model model) {
+    @PostMapping("/register")
+    public String register(
+            @RequestParam String name,
+            @RequestParam String password,
+            @RequestParam String email,
+            HttpSession session,
+            Model model) {
         try {
-            User user = userService.login(email, password);
+            User user = new User(name, email, password);
+            user = userService.register(user);
             session.setAttribute("loggedInUser", user);
-
-            if (returnUrl != null && !returnUrl.isEmpty()) {
-                return "redirect:" + returnUrl;
-            }
-            return "redirect:/index"; // default homepage
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("returnUrl", returnUrl);
-            return "signin";
-        }
-    }
-
-    @PostMapping("/signin/signup")
-    public String processSignUp(@RequestParam String name, @RequestParam String email, @RequestParam String password,
-            @RequestParam(required = false) String returnUrl, HttpSession session, Model model) {
-        try {
-            User usr = new User(name, email, password);
-            usr = userService.createUser(usr);
-            session.setAttribute("loggedInUser", usr);
-
-            if (returnUrl != null && !returnUrl.isEmpty()) {
-                return "redirect:" + returnUrl;
-            }
             return "redirect:/index";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("returnUrl", returnUrl);
             return "signin";
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        userService.logout(session); // call service method (optional)
-        return "redirect:/index"; // redirect to sign-in page or homepage
+    // Login page (GET) - must match SecurityConfig loginPage URL
+    @GetMapping("/signin")
+    public String signinPage() {
+        return "signin"; // signin.html view (your login form)
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "redirect:/index";
     }
 
 }

@@ -215,8 +215,6 @@
 
     <h1>All Blog Posts</h1>
 
-    <a href="/blog/create">Create New Post</a>
-
 
     <ul>
         <li th:each="post : ${posts}">
@@ -249,12 +247,7 @@
                 <span th:text="${likeCounts[post.id]}">0</span>
             </p>
 
-            <!-- 🗑 Delete Button -->
-            <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm">
-                    <i class="bi bi-trash"></i> Delete
-                </button>
-            </form>
+
 
             <hr>
         </li>
